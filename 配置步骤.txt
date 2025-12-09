@@ -1,0 +1,13 @@
+启动mysql: mysql -u root -p
+密码：123（安装mysql时设置用户名为root 密码为123）
+create database studentms;
+show databases;（显示有studentms即可）
+use studentms;
+source F:/code/StudentManageSystem-main/mysql/studentms.sql;(文件地址替换成自己项目下的studentms.sql地址，注意\换成/，且不需要引号）
+第二个power shell
+cd "C:\Users\GoodEnough\Desktop\StudentManageSystem-main\student_client"
+npm install
+npm run serve
+第三个 powershell
+cd "C:\Users\GoodEnough\Desktop\StudentManageSystem-main\student_server"
+java -jar student_server.jar
