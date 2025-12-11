@@ -9,15 +9,18 @@
     </div>
     
     <div class="header-right">
-      <span class="welcome-text">
-        <i class="el-icon-date"></i> {{ currentTerm }} 学期
-      </span>
+      <div class="term-info">
+        <i class="el-icon-date icon"></i>
+        <span>{{ currentTerm }} 学期</span>
+      </div>
       
-      <el-divider direction="vertical"></el-divider>
+      <el-divider direction="vertical" class="custom-divider"></el-divider>
       
       <el-dropdown trigger="click" class="user-dropdown">
         <span class="el-dropdown-link user-name">
-           <el-avatar size="small" :style="{backgroundColor: '#764ba2'}"> {{ name.substring(0,1) }} </el-avatar>
+           <el-avatar size="small" :style="{backgroundColor: '#764ba2', fontSize: '14px'}"> 
+             {{ name ? name.substring(0,1) : 'U' }} 
+           </el-avatar>
            <span class="name-text">{{ name }}</span>
            <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
@@ -56,9 +59,9 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 核心：左右两端对齐 */
-  padding: 0 30px; /* 左右留出一些呼吸空间 */
-  box-sizing: border-box; /* 确保 padding 不会撑大宽度 */
+  justify-content: space-between;
+  padding: 0 20px; /* 稍微减小内边距以适应小屏幕 */
+  box-sizing: border-box;
   background: #fff;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
@@ -67,7 +70,7 @@ export default {
 .header-left {
   display: flex;
   align-items: center;
-  gap: 15px;
+  /* 移除 gap，使用 margin 兼容旧浏览器 */
 }
 
 .logo-box {
@@ -78,6 +81,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 12px; /* 替代 gap */
+  flex-shrink: 0; /* 防止Logo被压缩 */
 }
 
 .logo-icon {
@@ -86,44 +91,60 @@ export default {
 }
 
 .system-title {
-  font-size: 20px;
+  font-size: 18px; /* 稍微调小一点字体，增强兼容性 */
   font-weight: 700;
   color: #2c3e50;
-  letter-spacing: 0.5px;
+  white-space: nowrap; /* 防止标题换行 */
 }
 
 /* 右侧样式 */
 .header-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  flex-shrink: 0; /* 关键：防止右侧被挤压 */
 }
 
-.welcome-text {
+/* 修改部分：新的学期样式 */
+.term-info {
+  display: flex;
+  align-items: center;
   font-size: 14px;
   color: #606266;
-  background: #f4f4f5;
-  padding: 6px 12px;
-  border-radius: 20px;
+  white-space: nowrap; /* 关键：强制不换行 */
+  margin-right: 15px; /* 与分割线的距离 */
+}
+
+.term-info .icon {
+  margin-right: 6px;
+  font-size: 16px;
+  color: #909399;
+}
+
+.custom-divider {
+  margin: 0 15px 0 0; /* 调整分割线边距 */
+  height: 20px;
 }
 
 .user-name {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 4px;
-  transition: all 0.3s;
+  padding: 4px 0; /* 去掉左右padding，避免hover背景块在窄屏出问题 */
+  transition: opacity 0.3s;
+  white-space: nowrap; /* 防止用户名换行 */
 }
 
 .user-name:hover {
-  background: #f5f7fa;
+  opacity: 0.8; /* 简单的 hover 效果 */
 }
 
 .name-text {
   margin-left: 8px;
   font-weight: 600;
   color: #333;
-  font-size: 15px;
+  font-size: 14px;
+  max-width: 100px; /* 限制名字最大宽度 */
+  overflow: hidden;
+  text-overflow: ellipsis; /* 名字太长显示省略号 */
 }
 </style>

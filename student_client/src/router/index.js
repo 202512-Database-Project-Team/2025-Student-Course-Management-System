@@ -38,7 +38,7 @@ import teacherQueryGradeCourse from "@/views/Teacher/teacherGradeCourseManage/te
 import teacherGradeCourseList from "@/views/Teacher/teacherGradeCourseManage/teacherGradeCourseList";
 import teacherEditorGradeCourse from "@/views/Teacher/teacherGradeCourseManage/teacherEditorGradeCourse";
 import updateInfo from "@/components/updateInfo";
-
+import NotificationDetail from '@/views/Student/NotificationDetail';
 Vue.use(VueRouter)
 
 const routes = [
@@ -309,8 +309,15 @@ const routes = [
             name: '学生主页',
             component: studentHome,
             meta: {requireAuth: true},
-          },
+          }
         ],
+      },
+      // ✅ 把它移动到这里 (作为 student 的直接子路由)
+      {
+          path: '/notification/:id', 
+          name: 'notificationDetail',
+          component: NotificationDetail,
+          meta: {requireAuth: true}
       },
       {
         path: '/updateInfo',

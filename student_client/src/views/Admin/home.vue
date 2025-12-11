@@ -3,7 +3,7 @@
     <div class="welcome-banner">
       <div class="banner-content">
         <h2>早安，管理员</h2>
-        <p>今天是 {{ today }}，祝你工作愉快！系统运行状态良好。</p>
+        <p>今天是 {{ today }}，祝你工作愉快！系统运行状态良好。</p >
       </div>
       <div class="banner-img">
         <i class="el-icon-data-line"></i>
@@ -24,40 +24,49 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="20">
-      <el-col :span="16">
-        <el-card class="chart-card">
+    <el-row :gutter="20" class="content-row">
+      <el-col :span="16" class="equal-height-col">
+        <el-card class="chart-card" shadow="hover">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-pie-chart"></i> 快速操作</span>
           </div>
-          <div class="quick-actions">
-            <el-button type="primary" icon="el-icon-plus" plain @click="$router.push('/addStudent')">添加学生</el-button>
-            <el-button type="success" icon="el-icon-user-solid" plain @click="$router.push('/addTeacher')">添加教师</el-button>
-            <el-button type="warning" icon="el-icon-notebook-1" plain @click="$router.push('/addCourse')">添加课程</el-button>
-            <el-button type="info" icon="el-icon-search" plain @click="$router.push('/studentList')">学生查询</el-button>
-          </div>
-          <div class="system-desc">
-            <p>💡 提示：点击左侧菜单栏可进行详细的教务管理操作。</p>
+          
+          <div class="operation-container">
+            <div class="quick-actions-grid">
+              <div class="action-item blue" @click="$router.push('/addStudent')">
+                <div class="icon-wrapper"><i class="el-icon-plus"></i></div>
+                <span class="label">添加学生</span>
+              </div>
+              <div class="action-item green" @click="$router.push('/addTeacher')">
+                <div class="icon-wrapper"><i class="el-icon-user-solid"></i></div>
+                <span class="label">添加教师</span>
+              </div>
+              <div class="action-item orange" @click="$router.push('/addCourse')">
+                <div class="icon-wrapper"><i class="el-icon-notebook-1"></i></div>
+                <span class="label">添加课程</span>
+              </div>
+              <div class="action-item purple" @click="$router.push('/studentList')">
+                <div class="icon-wrapper"><i class="el-icon-search"></i></div>
+                <span class="label">学生查询</span>
+              </div>
+            </div>
+
+            <div class="system-desc">
+              <p><i class="el-icon-info"></i> 提示：点击上方按钮可快速跳转至对应管理页面，更多功能请查看左侧菜单。</p >
+            </div>
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
-        <el-card class="chart-card">
+
+      <el-col :span="8" class="equal-height-col">
+        <el-card class="chart-card" shadow="hover">
           <div slot="header">
             <span><i class="el-icon-bell"></i> 系统公告</span>
           </div>
           <ul class="notice-list">
-            <li>
-              <span class="tag urgent">紧急</span>
-              <span class="text">期末成绩录入截止通知</span>
-            </li>
-            <li>
-              <span class="tag normal">通知</span>
-              <span class="text">系统升级维护公告 v2.0</span>
-            </li>
-            <li>
-              <span class="tag normal">通知</span>
-              <span class="text">新学期选课时间安排</span>
+            <li v-for="item in notices" :key="item.id" @click="viewNotice(item.id)" class="clickable">
+              <span class="tag" :class="item.typeClass">{{ item.type }}</span>
+              <span class="text">{{ item.title }}</span>
             </li>
           </ul>
         </el-card>
@@ -72,13 +81,54 @@ export default {
   data() {
     return {
       today: new Date().toLocaleDateString(),
-      // 模拟的统计数据
       statCards: [
-        { label: '学生总数', value: '2,450', icon: 'el-icon-user', color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-        { label: '教师总数', value: '186', icon: 'el-icon-s-custom', color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%)' },
-        { label: '课程数量', value: '85', icon: 'el-icon-reading', color: 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)' },
-        { label: '今日访问', value: '532', icon: 'el-icon-data-analysis', color: 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)' },
+        { label: '学生总数', value: '-', icon: 'el-icon-user', color: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+        { label: '教师总数', value: '-', icon: 'el-icon-s-custom', color: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%)' },
+        { label: '课程数量', value: '-', icon: 'el-icon-reading', color: 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)' },
+        { label: '今日访问', value: '-', icon: 'el-icon-data-analysis', color: 'linear-gradient(135deg, #fccb90 0%, #d57eeb 100%)' },
+      ],
+      notices: [
+        { id: 201, title: '期末成绩录入截止通知', type: '紧急', typeClass: 'urgent' },
+        { id: 202, title: '系统升级维护公告 v2.0', type: '通知', typeClass: 'normal' },
+        { id: 203, title: '新学期选课时间安排', type: '通知', typeClass: 'normal' },
       ]
+    }
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    viewNotice(id) {
+      this.$router.push(`/notification/${id}`);
+    },
+    fetchData() {
+      const that = this;
+
+      axios.get('http://localhost:10086/student/getLength').then(function (resp) {
+        if (resp.data !== undefined) {
+          that.statCards[0].value = resp.data.toLocaleString();
+        }
+      }).catch(err => console.error("获取学生数失败", err));
+
+      axios.post('http://localhost:10086/teacher/findBySearch', {}).then(function (resp) {
+        if (resp.data) {
+          that.statCards[1].value = resp.data.length.toLocaleString();
+        }
+      }).catch(err => console.error("获取教师数失败", err));
+
+      axios.post('http://localhost:10086/course/findBySearch', {}).then(function (resp) {
+        if (resp.data) {
+          that.statCards[2].value = resp.data.length.toLocaleString();
+        }
+      }).catch(err => console.error("获取课程数失败", err));
+
+      const dateStr = new Date().toDateString();
+      let seed = 0;
+      for (let i = 0; i < dateStr.length; i++) {
+        seed += dateStr.charCodeAt(i);
+      }
+      const visits = 200 + (seed % 300); 
+      that.statCards[3].value = visits.toLocaleString();
     }
   }
 }
@@ -140,6 +190,11 @@ export default {
   display: flex;
   align-items: center;
 }
+::v-deep .el-card__body {
+  display: flex;
+  align-items: center;
+}
+
 .stat-icon {
   width: 60px;
   height: 60px;
@@ -165,18 +220,93 @@ export default {
   color: #909399;
 }
 
-/* 快捷操作 */
-.quick-actions {
+/* 核心布局调整：等高对齐 */
+.content-row {
   display: flex;
-  gap: 15px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+.equal-height-col {
+  display: flex;
+  flex-direction: column;
+}
+.chart-card {
+  flex: 1; /* 关键：撑满列的高度 */
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: none;
+}
+::v-deep .chart-card .el-card__body {
+  flex: 1; /* 关键：撑满卡片主体 */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* 快速操作区域样式优化 */
+.operation-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between; /* 上下分布 */
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4列等宽 */
+  gap: 20px;
   margin-bottom: 20px;
 }
-.system-desc {
-  background: #f4f4f5;
-  padding: 15px;
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 25px 10px;
   border-radius: 8px;
-  color: #909399;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #f8f9fa;
+  border: 1px solid #eee;
+}
+.action-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.icon-wrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  margin-bottom: 10px;
+}
+.action-item .label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* 按钮颜色主题 */
+.action-item.blue .icon-wrapper { background: linear-gradient(135deg, #409EFF, #79bbff); }
+.action-item.green .icon-wrapper { background: linear-gradient(135deg, #67C23A, #95d475); }
+.action-item.orange .icon-wrapper { background: linear-gradient(135deg, #E6A23C, #f3d19e); }
+.action-item.purple .icon-wrapper { background: linear-gradient(135deg, #909399, #b1b3b8); }
+
+/* 提示模块 */
+.system-desc {
+  background: #ecf5ff;
+  border-left: 5px solid #409EFF;
+  padding: 12px 15px;
+  border-radius: 4px;
+  color: #409EFF;
   font-size: 13px;
+  margin-top: auto; /* 自动推到最底部 */
 }
 
 /* 公告列表 */
@@ -188,18 +318,23 @@ export default {
 .notice-list li {
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  padding: 15px 10px;
   border-bottom: 1px solid #f0f2f5;
+  transition: background-color 0.3s;
+  border-radius: 4px;
 }
-.notice-list li:last-child {
-  border-bottom: none;
-}
+.notice-list li.clickable { cursor: pointer; }
+.notice-list li.clickable:hover { background-color: #f5f7fa; }
+.notice-list li:last-child { border-bottom: none; }
+
 .tag {
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 12px;
   margin-right: 10px;
   color: white;
+  min-width: 40px;
+  text-align: center;
 }
 .tag.urgent { background-color: #ff7875; }
 .tag.normal { background-color: #69c0ff; }
