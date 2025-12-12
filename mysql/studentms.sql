@@ -7,7 +7,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -18,17 +18,16 @@
 --
 -- Table structure for table `c`
 --
-SET NAMES 'UTF8';
-set character set  utf8;
+SET NAMES 'utf8mb4';
+set character set  utf8mb4;
 drop database if exists studentms;
-CREATE DATABASE studentms DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE studentms DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 GRANT all ON studentms.* TO 'root'@'%';
 use studentms;
 
-
 DROP TABLE IF EXISTS `c`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `c` (
   `cid` int(11) NOT NULL AUTO_INCREMENT,
   `cname` varchar(30) NOT NULL,
@@ -53,7 +52,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ct`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ct` (
   `ctid` int(11) NOT NULL AUTO_INCREMENT,
   `cid` int(11) DEFAULT NULL,
@@ -83,7 +82,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `s`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `s` (
   `sid` int(11) NOT NULL AUTO_INCREMENT,
   `sname` varchar(30) NOT NULL,
@@ -98,7 +97,7 @@ CREATE TABLE `s` (
 
 LOCK TABLES `s` WRITE;
 /*!40000 ALTER TABLE `s` DISABLE KEYS */;
-INSERT INTO `s` VALUES (1,'阮健乘','1234'),(2,'张四','123'),(3,'李四','1234'),(4,'彭昊辉','123456'),(6,'林春霞','123'),(7,'董一超','12345'),(8,'董超','123'),(9,'张千','10086'),(10,'李万','10085'),(14,'薇尔莉特','123'),(21,'庄亮','123'),(22,'钟平','1234'),(23,'李煜豪','123');
+INSERT INTO `s` VALUES (1,'阮健乘','1234'),(2,'张四','123'),(3,'李四','1234'),(4,'彭昊辉','123456'),(6,'林春霞','123'),(7,'董一超','12345'),(8,'董超','123'),(9,'张千','10086'),(10,'李万','10085'),(14,'薇尔莉特','123'),(21,'庄亮','123'),(22,'钟平','1234'),(23,'李煜豪','123'),(24,'胡嵩鼎','1234'),(100,'zhang','100');
 /*!40000 ALTER TABLE `s` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,7 +107,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `sct`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sct` (
   `sctid` int(11) NOT NULL AUTO_INCREMENT,
   `sid` int(11) DEFAULT NULL,
@@ -125,10 +124,37 @@ CREATE TABLE `sct` (
   CONSTRAINT `sct_ibfk_3` FOREIGN KEY (`cid`) REFERENCES `ct` (`cid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
+INSERT INTO `sct` VALUES (1,1,1,1,'通过',1);
 --
 -- Dumping data for table `sct`
 --
+
+DROP TABLE IF EXISTS `apply_exemption`;
+
+CREATE TABLE `apply_exemption` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `sid` INT(11) NOT NULL COMMENT '关联学生表s.sid',
+    `cid` INT(11) NOT NULL COMMENT '关联课程表c.cid',
+    `term` VARCHAR(30) NOT NULL COMMENT '申请学期 (如: 22-春季学期)',
+    `reason` VARCHAR(255) DEFAULT NULL COMMENT '申请理由',
+    `status` INT(1) DEFAULT 0 COMMENT '0:待审核, 1:已通过, 2:已驳回',
+    `audit_reason` VARCHAR(255) DEFAULT NULL COMMENT '审核意见',
+    `audit_by` INT(11) DEFAULT NULL COMMENT '审核人(教师ID)',
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '申请时间',
+    `audit_time` DATETIME DEFAULT NULL COMMENT '审核时间',
+    `image_url` VARCHAR(255) DEFAULT NULL COMMENT '存放图片路径或 URL',
+    PRIMARY KEY (`id`),
+    KEY `idx_sid` (`sid`),
+    KEY `idx_cid` (`cid`),
+    CONSTRAINT `fk_apply_sid` FOREIGN KEY (`sid`) REFERENCES `s` (`sid`) ON DELETE CASCADE,
+    CONSTRAINT `fk_apply_cid` FOREIGN KEY (`cid`) REFERENCES `c` (`cid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='学生免修免考申请表';
+
+
+
+
+
+
 
 LOCK TABLES `sct` WRITE;
 /*!40000 ALTER TABLE `sct` DISABLE KEYS */;
@@ -142,7 +168,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `t`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `t` (
   `tid` int(11) NOT NULL AUTO_INCREMENT,
   `tname` varchar(30) NOT NULL,
@@ -171,7 +197,3 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 GRANT all ON studentms.* TO 'root'@'%';
-
-
-
--- Dump completed on 2022-02-15 13:44:52

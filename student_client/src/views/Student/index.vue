@@ -1,21 +1,32 @@
 <template>
-  <el-container class="main-container">
-    <el-header><r-header></r-header></el-header>
-    <el-container>
-      <r-aside></r-aside>
-      <el-main>
-        <transition name="fade-transform" mode="out-in">
-          <router-view></router-view>
-        </transition>
-      </el-main>
+<div>
+    <el-container class="main-container">
+      <el-header><r-header></r-header></el-header>
+      <el-container>
+        <r-aside></r-aside>
+        <el-main>
+          <transition name="fade-transform" mode="out-in">
+            <router-view></router-view>
+          </transition>
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+    <AiChat />
+  </div>
 </template>
 
 <script>
 import RAside from "@/components/r-aside";
 import RHeader from "@/components/r-header";
-export default { name: "index", components: {RHeader, RAside} }
+import AiChat from "@/components/AiChat.vue";
+export default {
+  name: "index",
+  components: {
+    RHeader,
+    RAside,
+    AiChat,
+  },
+};
 </script>
 
 <style scoped>
