@@ -45,6 +45,10 @@ public interface StudentCourseTeacherMapper {
     @Insert("INSERT INTO studentms.sct (sid, cid, tid, term) VALUES (#{s.sid}, #{s.cid}, #{s.tid}, #{s.term})")
     public boolean insert(@Param("s")StudentCourseTeacher studentCourseTeacher);
 
+    // 插入带成绩的记录 (免修用)
+    @Insert("INSERT INTO studentms.sct (sid, cid, tid, term, grade) VALUES (#{s.sid}, #{s.cid}, #{s.tid}, #{s.term}, #{s.grade})")
+    public boolean insertWithGrade(@Param("s") StudentCourseTeacher studentCourseTeacher);
+
     @Update("UPDATE studentms.sct SET sct.grade = #{grade} WHERE sct.sid = #{sid} AND sct.tid = #{tid} AND sct.cid = #{cid} AND sct.term = #{term}")
     public boolean updateById(@Param("sid") Integer sid,
                               @Param("cid") Integer cid,
