@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- ⚠️注意：namespace 必须和你刚才写的 Mapper 接口的全路径完全一致 -->
+
 <mapper namespace="com.auggie.student_server.mapper.ExemptionMapper">
 
-    <!-- 1. 对应接口的 save 方法: 学生提交申请 -->
-    <!-- parameterType="Exemption" 是因为你在 Entity 上加了 @Alias("Exemption") -->
     <insert id="save" parameterType="Exemption">
-        INSERT INTO apply_exemption (sid, cid, term, reason, status)
-        VALUES (#{exemption.sid}, #{exemption.cid}, #{exemption.term}, #{exemption.reason}, 0)
+        INSERT INTO apply_exemption (sid, cid, term, reason, proof, status)
+        VALUES (#{exemption.sid}, #{exemption.cid}, #{exemption.term}, #{exemption.reason}, #{exemption.proof}, 0)
     </insert>
 
-    <!-- 2. 对应接口的 findBySid 方法: 学生查历史 -->
     <select id="findBySid" resultType="Exemption">
         SELECT 
             e.*, 
-            c.cname as cname  <!-- 联表查出课程名 -->
+            c.cname as cname
         FROM apply_exemption e
         LEFT JOIN c ON e.cid = c.cid
         WHERE e.sid = #{sid}
         ORDER BY e.create_time DESC
     </select>
 
-    <!-- 3. 对应接口的 findPending 方法: 老师查待办 -->
     <select id="findPending" resultType="Exemption">
         SELECT 
             e.*, 
-            s.sname as sname, <!-- 联表查出学生名 -->
-            c.cname as cname  <!-- 联表查出课程名 -->
+            s.sname as sname,
+            c.cname as cname
         FROM apply_exemption e
         LEFT JOIN s ON e.sid = s.sid
         LEFT JOIN c ON e.cid = c.cid
         WHERE e.status = 0
     </select>
 
-    <!-- 4. 对应接口的 updateStatus 方法: 审核操作 -->
     <update id="updateStatus" parameterType="Exemption">
         UPDATE apply_exemption
         SET status = #{exemption.status},
@@ -42,5 +37,13 @@
             audit_time = NOW()
         WHERE id = #{exemption.id}
     </update>
+
+    <select id="findBySidCidTerm" resultType="Exemption">
+        SELECT * FROM apply_exemption
+        WHERE sid = #{sid}
+          AND cid = #{cid}
+          AND term = #{term}
+            LIMIT 1
+    </select>
 
 </mapper>

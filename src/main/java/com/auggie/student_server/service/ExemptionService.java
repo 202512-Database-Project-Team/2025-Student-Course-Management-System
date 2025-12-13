@@ -4,6 +4,9 @@ import com.auggie.student_server.entity.Exemption;
 import com.auggie.student_server.mapper.ExemptionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.auggie.student_server.mapper.StudentCourseTeacherMapper;
+import com.auggie.student_server.entity.StudentCourseTeacher;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,12 +23,26 @@ public class ExemptionService {
     @Autowired
     private ExemptionMapper exemptionMapper;
 
+    @Autowired
+    private StudentCourseTeacherMapper sctMapper;
     /**
-     * 学生提交免修申请
+     * 学生提交免修申请（含防重）
      */
     public boolean save(Exemption exemption) {
-        // 这里可以加逻辑，比如检查该学生是否已经申请过这门课，避免重复
-        // 为了简单，目前直接保存
+        // 1 检查该生、该学期、该课程是否已经提交过申请
+        Exemption existing = exemptionMapper.findBySidCidTerm(
+                exemption.getSid(),
+                exemption.getCid(),
+                exemption.getTerm()
+        );
+
+        // 2 有，拦截
+        if (existing != null) {
+            System.out.println("拦截重复申请：sid=" + exemption.getSid() + ", cid=" + exemption.getCid());
+            return false; // 返回失败，前端会收到 false
+        }
+
+        // 3. 无，放行，保存
         return exemptionMapper.save(exemption);
     }
 
@@ -44,11 +61,30 @@ public class ExemptionService {
     }
 
     /**
-     * 审核操作 (通过 或 驳回)
+     * 审核操作 (通过 或 驳回) 加事务 通过后自动给80分
      */
+    @Transactional
     public boolean audit(Exemption exemption) {
-        // 打印一下，方便调试
-        System.out.println("正在审核免修申请 ID: " + exemption.getId() + " 状态变为: " + exemption.getStatus());
-        return exemptionMapper.updateStatus(exemption);
+        boolean success = exemptionMapper.updateStatus(exemption);
+
+        if (success && exemption.getStatus() == 1) {
+            // 构建成绩对象
+            StudentCourseTeacher sct = new StudentCourseTeacher();
+            sct.setSid(exemption.getSid());
+            sct.setCid(exemption.getCid());
+            sct.setTerm(exemption.getTerm());
+            sct.setTid(exemption.getAuditBy());
+            sct.setGrade(80.0F);                  // 免修固定给 80 分
+
+            // 成绩保存
+            try {
+                sctMapper.insertWithGrade(sct);
+                System.out.println("免修成绩录入成功：80分");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("录入失败，可能该学生已选修过此课程");
+            }
+        }
+        return success;
     }
 }
