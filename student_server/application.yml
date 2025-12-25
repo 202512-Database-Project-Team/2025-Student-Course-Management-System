@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/studentms?setUnicode=true&characterEncoding=utf8&useAffectedRows=true
     username: root
-    password: 123456
+    password: 123
 
   servlet:
     multipart:

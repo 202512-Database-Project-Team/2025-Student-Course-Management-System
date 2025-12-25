@@ -39,6 +39,11 @@ import teacherGradeCourseList from "@/views/Teacher/teacherGradeCourseManage/tea
 import teacherEditorGradeCourse from "@/views/Teacher/teacherGradeCourseManage/teacherEditorGradeCourse";
 import updateInfo from "@/components/updateInfo";
 import NotificationDetail from '@/views/Student/NotificationDetail';
+
+// 🟢 新增：引入免修相关的组件
+import StudentExemption from "@/views/Student/exemption/index";
+import TeacherExemptionAudit from "@/views/Teacher/exemption/audit";
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -288,6 +293,13 @@ const routes = [
             meta: {requireAuth: true}
           }
         ]
+      },
+      // 🟢 新增：教师端免修审核路由
+      {
+        path: '/teacher/exemption-audit',
+        name: '免修审核',
+        component: TeacherExemptionAudit,
+        meta: {requireAuth: true}
       }
     ]
   },
@@ -312,7 +324,6 @@ const routes = [
           }
         ],
       },
-      // ✅ 把它移动到这里 (作为 student 的直接子路由)
       {
           path: '/notification/:id', 
           name: 'notificationDetail',
@@ -366,6 +377,13 @@ const routes = [
             meta: {requireAuth: true}
           },
         ]
+      },
+      // 🟢 新增：学生端免修申请路由
+      {
+        path: '/student/exemption',
+        name: '免修申请',
+        component: StudentExemption,
+        meta: {requireAuth: true}
       }
     ]
   }

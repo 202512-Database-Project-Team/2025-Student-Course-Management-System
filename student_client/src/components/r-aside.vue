@@ -10,7 +10,7 @@
       
       <div v-for="(item, i) in navList" :key="i">
         <el-menu-item v-if="!item.children" :index="item.name">
-          <i class="el-icon-menu"></i>
+          <i :class="item.icon || 'el-icon-menu'"></i>
           <span slot="title">{{ item.navItem }}</span>
         </el-menu-item>
 
@@ -49,8 +49,10 @@ export default {
             {name: '/studentSelectCourse', navItem: '学生选课'},
             {name: '/querySelectedCourse', navItem: '课表查询'}
           ]},
+        // 🟢 修改 2：学生端新增免修申请入口
+        
         {name: '/student/courseGrade', navItem: '成绩查询', icon: 'el-icon-medal-1', children: [
-            {name: '/queryCourseGrade', navItem: '我的成绩'}
+            {name: '/queryCourseGrade', navItem: '我的成绩'}, {name: '/student/exemption', navItem: '免修申请'}
           ]},
         {name: '/student/updateInfo', navItem: '个人信息', icon: 'el-icon-user', children: [
             {name: '/updateInfoHome', navItem: '信息维护'}
@@ -64,8 +66,10 @@ export default {
             {name: '/offerCourse', navItem: '申请开课'}
           ]},
         {name: '/teacher/gradeCourseManage', navItem: '成绩管理', icon: 'el-icon-edit-outline', children: [
-            {name: '/teacherQueryGradeCourseManage', navItem: '录入成绩'}
+            {name: '/teacherQueryGradeCourseManage', navItem: '录入成绩'}, {name: '/teacher/exemption-audit', navItem: '免修审核'}
           ]},
+        // 🟢 修改 3：教师端新增免修审核入口
+
         {name: '/teacher/updateInfo', navItem: '个人信息', icon: 'el-icon-user', children: [
             {name: '/updateInfoHome', navItem: '信息维护'}
           ]}
@@ -97,7 +101,7 @@ export default {
 <style scoped>
 /* 侧边栏样式重构 */
 .custom-aside {
-  height: 100%;
+  height: 100vh;
   transition: width 0.3s;
   overflow-x: hidden;
 }
