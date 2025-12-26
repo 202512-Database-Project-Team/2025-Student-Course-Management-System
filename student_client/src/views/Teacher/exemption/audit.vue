@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       pendingList: [],
-      tid: sessionStorage.getItem('userid'), // 获取当前教师ID
+      tid: sessionStorage.getItem('tid'), // 获取当前教师ID
       dialogVisible: false,
       currentStatus: 0,
       currentRow: null,

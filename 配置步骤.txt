@@ -4,10 +4,13 @@ create database studentms;
 show databases;（显示有studentms即可）
 use studentms;
 source F:/code/StudentManageSystem-main/mysql/studentms.sql;(文件地址替换成自己项目下的studentms.sql地址，注意\换成/，且不需要引号）
+将文件StudentManageSystem-main\student_server\exemption_db_update.sql的内容除了注释全部复制进去
+
 第二个power shell
 cd "C:\Users\GoodEnough\Desktop\StudentManageSystem-main\student_client"
 npm install
 npm run serve
+
 第三个 powershell
 cd "C:\Users\GoodEnough\Desktop\StudentManageSystem-main\student_server"
-java -jar student_server.jar
+java -jar .\student_server-0.0.1-SNAPSHOT.jar
