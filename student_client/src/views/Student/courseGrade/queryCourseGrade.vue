@@ -44,9 +44,6 @@
             width="150">
         </el-table-column>
       </el-table>
-      <p>
-        平均成绩：{{ avg }}
-      </p>
       <el-pagination
           background
           layout="prev, pager, next"
@@ -77,7 +74,7 @@ export default {
       pageSize: 10,
       total: null,
       tmpList: null,
-      avg: 0,
+      // 这里删除了 avg: 0,
       term: sessionStorage.getItem('currentTerm'),
       termList: null
     }
@@ -100,15 +97,7 @@ export default {
           let length = that.tmpList.length
           let ans = (end < length) ? end : length
           that.tableData = that.tmpList.slice(start, end)
-          let totalScore = 0
-          for (let i = 0; i < that.total; i++) {
-            totalScore += that.tmpList[i].ccredit
-            that.avg += that.tmpList[i].ccredit * that.tmpList[i].grade
-          }
-          if (totalScore === 0)
-            that.avg = 0
-          else
-            that.avg /= totalScore
+          // 这里删除了计算平均分(avg)的 for 循环逻辑
         })
       },
       immediate: true
@@ -116,13 +105,3 @@ export default {
   }
 }
 </script>
-
-<!--
-  TODO：
-  1. 管理员：
-    1. 学生选课管理
-    2. 成绩管理（只能当前学期）
-  2. 学生：成绩排名
-  3. 教师：成绩管理（？使用弹框）（只能当前学期）
-
--->

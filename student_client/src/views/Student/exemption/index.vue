@@ -125,7 +125,7 @@ export default {
       loading: false,
       tableLoading: false,
       // 从 SessionStorage 获取当前用户ID和学期
-      sid: sessionStorage.getItem('userid'), 
+      sid: sessionStorage.getItem('sid'), 
       currentTerm: sessionStorage.getItem('currentTerm') || '2025-Spring', // 默认值防报错
       
       // 上传接口地址 (根据你的后端端口修改)
