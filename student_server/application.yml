@@ -17,3 +17,8 @@ mybatis:
 server:
   port: 10086
 
+logging:
+  level:
+    org.springframework.web.cors: DEBUG
+    org.springframework.web.servlet.handler.AbstractHandlerMapping: DEBUG
+
