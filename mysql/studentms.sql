@@ -221,7 +221,7 @@ INSERT INTO `sct` VALUES (1,82250001,1001,81000001,NULL,'22-春季学期');
 -- Dumping data for table `sct`
 --
 
-DDROP TABLE IF EXISTS `apply_exemption`;
+DROP TABLE IF EXISTS `apply_exemption`;
 CREATE TABLE `apply_exemption` (
     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
     `sid` int(11) NOT NULL COMMENT '学生ID',
