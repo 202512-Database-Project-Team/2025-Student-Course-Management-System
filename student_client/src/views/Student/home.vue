@@ -5,9 +5,6 @@
         <h2>Hi, {{ studentName }} 同学 </h2>
         <p>新的一天，继续加油！</p >
       </div>
-      <div class="banner-img">
-        < img :src="https://cdn-icons-png.flaticon.com/512/3426/3426653.png" alt="study"/>
-      </div>
     </div>
 
     <el-row :gutter="20" class="stat-row">
